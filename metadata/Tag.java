@@ -1,22 +1,26 @@
-import fileorganizer.database.DAO;
+package metadata;
+
+import fileorganizer.database.TagDAO;
 
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-class Tag {
-    private DAO dao;
-    static Set<String> tagsList;
-    private Set<String> newTagsList;
+public class Tag {
+    private int id;
+    private String tagName;
+    private TagDAO tagDAO;
+    public static Set<String> tagsList;
+    private static Set<String> newTagsList;
 
-    Tag(DAO dao) throws SQLException {
+    public Tag() {
         newTagsList = new HashSet<>();
-        this.dao=dao;
-        tagsList = dao.getTagsFromDb();
     }
 
-    public void addTags() {
+    public void createNewTags(TagDAO tagDAO) throws SQLException {
+        this.tagDAO = tagDAO;
+        tagsList = tagDAO.getTagNames();
         Scanner sc = new Scanner(System.in);
         String userInput = "";
             System.out.println("Add your tags\nif finished - type 'EXIT'");
@@ -25,13 +29,12 @@ class Tag {
                 if(!userInput.equalsIgnoreCase("EXIT") && !tagsList.contains(userInput.toLowerCase())) {
                     newTagsList.add(userInput.toLowerCase());
                 }
-
                 else if(userInput.equalsIgnoreCase("exit")) {
                     break;
                 }
             }
             try {
-                dao.insertTags(newTagsList);
+                tagDAO.insertTagsToDb(newTagsList);
             } catch(SQLException ex) {
                 ex.printStackTrace();
             }

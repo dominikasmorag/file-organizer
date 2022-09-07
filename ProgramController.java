@@ -1,22 +1,31 @@
-import fileorganizer.database.DAO;
+import fileorganizer.database.MyFileDAO;
+import fileorganizer.database.TagDAO;
+import metadata.ResultFile;
+import metadata.Tag;
 
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 class ProgramController {
+    private final Connection connection;
     private final File file;
-    private final DAO dao;
     private final Tag tag;
+    private final MyFileDAO myFileDAO;
+    private final ResultFile directory;
+    private final TagDAO tagDAO;
 
-    ProgramController(File file, DAO dao) throws SQLException {
+    ProgramController(Connection connection, File file) throws SQLException {
+        this.connection = connection;
         this.file = file;
-        this.dao = dao;
-        this.tag = new Tag(dao);
+        tag = new Tag();
+        myFileDAO = new MyFileDAO(connection);
+        directory = new ResultFile(myFileDAO);
+        tagDAO = new TagDAO(connection);
     }
 
     public void showMenu() throws SQLException {
-        ResultFile directory = new ResultFile(dao);
         String s = "";
         while(!s.equalsIgnoreCase("7")) {
             Scanner sc = new Scanner(System.in);
@@ -30,8 +39,8 @@ class ProgramController {
             s = sc.next();
 
             if(s.equalsIgnoreCase("1")) {
-                tag.addTags();
-                dao.insertTags(Tag.tagsList);
+                tag.createNewTags(tagDAO);
+                tagDAO.insertTagsToDb(Tag.tagsList);
             }
             else if(s.equalsIgnoreCase("2")) {
                 directory.searchTheDirectory(file, false);
@@ -40,15 +49,15 @@ class ProgramController {
                 directory.searchTheDirectory(file, true);
             }
             else if(s.equalsIgnoreCase("4")) {
-                System.out.println(dao.getTagsFromDb());
+                System.out.println(tagDAO.getTagNames());
             }
 
             else if(s.equalsIgnoreCase("5")) {
-                directory.addTagsToFiles();
+                //not yet
             }
 
             else if(s.equalsIgnoreCase("6")) {
-                System.out.println(dao.getFilesFromDb());
+                myFileDAO.getFiles();
             }
 
             else if(s.equalsIgnoreCase("7")) {
