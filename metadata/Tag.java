@@ -9,8 +9,7 @@ import java.util.Set;
 
 public class Tag {
     private int id;
-    private String tagName;
-    private TagDAO tagDAO;
+    private String name;
     public static Set<String> tagsList;
     private static Set<String> newTagsList;
 
@@ -19,10 +18,9 @@ public class Tag {
     }
 
     public void createNewTags(TagDAO tagDAO) throws SQLException {
-        this.tagDAO = tagDAO;
         tagsList = tagDAO.getTagNames();
         Scanner sc = new Scanner(System.in);
-        String userInput = "";
+        String userInput;
             System.out.println("Add your tags\nif finished - type 'EXIT'");
             while(true) {
                 userInput = sc.next();
@@ -39,4 +37,20 @@ public class Tag {
                 ex.printStackTrace();
             }
         }
+
+    public String getName() {
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}

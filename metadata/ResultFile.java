@@ -23,7 +23,7 @@ public class ResultFile {
         try {
             fileSet = fileDAO.getPathNames();
         } catch (SQLException ex) {
-            ex.getMessage();
+            ex.printStackTrace();
         }
         try {
             searchTheDir(file, searchRecursively);

@@ -7,8 +7,9 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws SQLException {
+
         JdbcDataSource ds = new JdbcDataSource();
-        ds.setUrl("jdbc:h2:C:/Users/domin/Desktop/git/filesdb");
+        ds.setUrl("jdbc:h2:C:/Users/domin/Desktop/git/nowabazadanychhihi");
         ds.setUser("sa");
         ds.setPassword("sa");
 
@@ -17,5 +18,6 @@ public class Main {
         File f = new File("C:\\Users\\domin\\Desktop\\FileOrganizerTest");
         ProgramController programController = new ProgramController(conn, f);
         programController.showMenu();
+
     }
 }

@@ -1,5 +1,6 @@
 import fileorganizer.database.MyFileDAO;
 import fileorganizer.database.TagDAO;
+import metadata.PathWithTag;
 import metadata.ResultFile;
 import metadata.Tag;
 
@@ -27,7 +28,7 @@ class ProgramController {
 
     public void showMenu() throws SQLException {
         String s = "";
-        while(!s.equalsIgnoreCase("7")) {
+        while(!s.equalsIgnoreCase("8")) {
             Scanner sc = new Scanner(System.in);
             System.out.println("1 - create new tags");
             System.out.println("2 - search the directories");
@@ -35,37 +36,38 @@ class ProgramController {
             System.out.println("4 - show all tags");
             System.out.println("5 - add tags to files");
             System.out.println("6 - show all files from DB");
-            System.out.println("7 - exit");
+            System.out.println("7 - combine path with tags");
+            System.out.println("8 - exit");
             s = sc.next();
 
-            if(s.equalsIgnoreCase("1")) {
-                tag.createNewTags(tagDAO);
-                tagDAO.insertTagsToDb(Tag.tagsList);
-            }
-            else if(s.equalsIgnoreCase("2")) {
-                directory.searchTheDirectory(file, false);
-            }
-            else if(s.equalsIgnoreCase("3")) {
-                directory.searchTheDirectory(file, true);
-            }
-            else if(s.equalsIgnoreCase("4")) {
-                System.out.println(tagDAO.getTagNames());
-            }
-
-            else if(s.equalsIgnoreCase("5")) {
-                //not yet
-            }
-
-            else if(s.equalsIgnoreCase("6")) {
-                myFileDAO.getFiles();
-            }
-
-            else if(s.equalsIgnoreCase("7")) {
-                break;
-            }
-
-            else {
-                System.err.println("wrong char");
+            switch (s) {
+                case "1":
+                    tag.createNewTags(tagDAO);
+                    tagDAO.insertTagsToDb(Tag.tagsList);
+                    break;
+                case "2":
+                    directory.searchTheDirectory(file, false);
+                    break;
+                case "3":
+                    directory.searchTheDirectory(file, true);
+                    break;
+                case "4":
+                    System.out.println(tagDAO.getTagNames());
+                    break;
+                case "5":
+                    //not yet
+                    break;
+                case "6":
+                    myFileDAO.getFiles();
+                    break;
+                case "7":
+                    PathWithTag.combinePathWithTag(connection);
+                    break;
+                case "8":
+                    break;
+                default:
+                    System.err.println("wrong char");
+                    break;
             }
         }
     }
