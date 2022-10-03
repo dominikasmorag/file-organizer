@@ -13,9 +13,9 @@ public class PathWithTag {
     private final String pathName;
     private final String tagName;
     public static HashSet<PathWithTag> pathWithTagSet;
-    private static HashSet<PathWithTag> newPathWithTagSet;
+    public static HashSet<PathWithTag> newPathWithTagSet;
 
-    PathWithTag(String pathName, String tagName) {
+    public PathWithTag(String pathName, String tagName) {
         this.pathName = pathName;
         this.tagName = tagName;
     }
@@ -32,7 +32,8 @@ public class PathWithTag {
                 askForCombination(pathName, tagNames);
         }
 
-        pathWithTagDAO.insertFileWithTags(newPathWithTagSet);
+            pathWithTagDAO.insertFileWithTags(newPathWithTagSet);
+
     }
 
     private static void askForCombination(String pathName, HashSet<String> tagNames) {
@@ -71,6 +72,10 @@ public class PathWithTag {
 
     public String getTagName() {
         return tagName;
+    }
+
+    public String toString() {
+        return "File: " + pathName + ", tag: " +tagName + "\n";
     }
 
 }

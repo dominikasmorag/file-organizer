@@ -7,9 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class PathWithTagDAO extends DAO {
-    private final String TABLE_NAME = "PATH_WITH_TAG";
+    private final String TABLE_NAME = "FILES_WITH_TAGS";
     private final TagDAO tagDAO;
     private final MyFileDAO myFileDAO;
 
@@ -21,21 +22,50 @@ public class PathWithTagDAO extends DAO {
     }
 
      public void insertFileWithTags(HashSet<PathWithTag> pathWithTagHashSet) throws SQLException {
-        HashSet<PathWithTag> pathWithTags = pathWithTagHashSet;
-
         HashMap<String, Integer> filesHashMap = myFileDAO.dataToHashMap();
         HashMap<String, Integer> tagHashMap = tagDAO.dataToHashMap();
-        insertStatement = conn.prepareStatement("INSERT INTO " + TABLE_NAME + "(ID_PATH, ID_TAG) VALUES(?, ?)");
+        insertStatement = conn.prepareStatement("INSERT INTO " + TABLE_NAME + "(ID_PATH, ID_TAG) VALUES(?,?)");
 
-        for(PathWithTag p : pathWithTags) {
+        for(PathWithTag p : pathWithTagHashSet) {
             insertStatement.setInt(1, filesHashMap.get(p.getPathName()));
             insertStatement.setInt(2, tagHashMap.get(p.getTagName()));
+            try {
+                insertStatement.executeUpdate();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
+    }
+
+    public HashSet<PathWithTag> findFileWithTag()  throws SQLException {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("enter the extension without dot");
+        String e = sc.next();
+        System.out.println("enter the tag for the file you are looking for");
+        String t = sc.next();
+        return getFileWithTag(e, t);
+    }
+
+    private HashSet<PathWithTag> getFileWithTag(String extension, String tag) throws SQLException {
+        HashSet<PathWithTag> fileWithTagSet = new HashSet<>();
+        rs = getDataStatement.executeQuery("SELECT files.path, tags.name FROM FILES, TAGS INNER JOIN files_with_tags" +
+                " ON files_with_tags.id_path = files.id_path AND files_with_tags.id_tag = tags.id_tag WHERE files.path LIKE '%." + extension + "'" +
+                " AND tags.name LIKE '" + tag + "'");
+        while(rs.next()) {
+            PathWithTag temp = new PathWithTag(rs.getString(1), rs.getString(2));
+            fileWithTagSet.add(temp);
+        }
+        return fileWithTagSet;
     }
 
     public HashSet<PathWithTag> getDataAsString() throws SQLException {
         HashSet<PathWithTag> pathWithTagSet = new HashSet<>();
-       rs = getDataStatement.executeQuery("SELECT files.path, tags.name FROM FILES_WITH_TAGS");
+         rs = getDataStatement.executeQuery("SELECT files.path, tags.name FROM FILES, TAGS INNER JOIN files_with_tags" +
+                " ON files_with_tags.id_path = files.id_path AND files_with_tags.id_tag = tags.id_tag");
+        while(rs.next()) {
+            PathWithTag temp = new PathWithTag(rs.getString(1), rs.getString(2));
+            pathWithTagSet.add(temp);
+        }
         return pathWithTagSet;
     }
 
