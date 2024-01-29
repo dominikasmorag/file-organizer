@@ -24,7 +24,7 @@ public class PathWithTagDAO extends DAO {
      public void insertFileWithTags(HashSet<PathWithTag> pathWithTagHashSet) throws SQLException {
         HashMap<String, Integer> filesHashMap = myFileDAO.dataToHashMap();
         HashMap<String, Integer> tagHashMap = tagDAO.dataToHashMap();
-        insertStatement = conn.prepareStatement("INSERT INTO " + TABLE_NAME + "(ID_PATH, ID_TAG) VALUES(?,?)");
+        insertStatement = conn.prepareStatement("INSERT INTO " + TABLE_NAME + "(PATH_ID, TAG_ID) VALUES(?,?)");
 
         for(PathWithTag p : pathWithTagHashSet) {
             insertStatement.setInt(1, filesHashMap.get(p.getPathName()));
@@ -49,7 +49,7 @@ public class PathWithTagDAO extends DAO {
     private HashSet<PathWithTag> getFileWithTag(String extension, String tag) throws SQLException {
         HashSet<PathWithTag> fileWithTagSet = new HashSet<>();
         rs = getDataStatement.executeQuery("SELECT files.path, tags.name FROM FILES, TAGS INNER JOIN files_with_tags" +
-                " ON files_with_tags.id_path = files.id_path AND files_with_tags.id_tag = tags.id_tag WHERE files.path LIKE '%." + extension + "'" +
+                " ON files_with_tags.path_id = files.id AND files_with_tags.tag_id = tags.id WHERE files.path LIKE '%." + extension + "'" +
                 " AND tags.name LIKE '" + tag + "'");
         while(rs.next()) {
             PathWithTag temp = new PathWithTag(rs.getString(1), rs.getString(2));
@@ -61,7 +61,7 @@ public class PathWithTagDAO extends DAO {
     public HashSet<PathWithTag> getDataAsString() throws SQLException {
         HashSet<PathWithTag> pathWithTagSet = new HashSet<>();
          rs = getDataStatement.executeQuery("SELECT files.path, tags.name FROM FILES, TAGS INNER JOIN files_with_tags" +
-                " ON files_with_tags.id_path = files.id_path AND files_with_tags.id_tag = tags.id_tag");
+                " ON files_with_tags.path_id = files.id AND files_with_tags.tag_id = tags.id");
         while(rs.next()) {
             PathWithTag temp = new PathWithTag(rs.getString(1), rs.getString(2));
             pathWithTagSet.add(temp);
