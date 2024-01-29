@@ -6,17 +6,17 @@ public class DataBase {
     private static final String TAGS_TABLE_NAME = "TAGS";
     private static final String CONNECTOR_TABLE_NAME = "FILES_WITH_TAGS";
     private static final String CREATE_FILES_TABLE = "CREATE TABLE IF NOT EXISTS " + FILES_TABLE_NAME + " (" +
-            "ID_PATH NUMBER AUTO_INCREMENT PRIMARY KEY," +
-            "PATH VARCHAR(400))";
+            "ID NUMBER AUTO_INCREMENT PRIMARY KEY," +
+            "PATH VARCHAR(400) UNIQUE)";
     private static final String CREATE_TAGS_TABLE = "CREATE TABLE IF NOT EXISTS "+ TAGS_TABLE_NAME + " (" +
-            "ID_TAG NUMBER AUTO_INCREMENT PRIMARY KEY," +
-            "NAME VARCHAR(30))";
+            "ID NUMBER AUTO_INCREMENT PRIMARY KEY," +
+            "NAME VARCHAR(30) UNIQUE)";
     private static final String CREATE_CONNECTOR_TABLE = "CREATE TABLE IF NOT EXISTS " + CONNECTOR_TABLE_NAME + " (" +
-            "ID_PATH NUMBER NOT NULL, " +
-            "ID_TAG NUMBER NOT NULL," +
-            "FOREIGN KEY(ID_PATH) REFERENCES FILES(ID_PATH)," +
-            "FOREIGN KEY(ID_TAG) REFERENCES TAGS(ID_TAG)," +
-            "PRIMARY KEY(ID_PATH, ID_TAG))";
+            "PATH_ID NUMBER NOT NULL, " +
+            "TAG_ID NUMBER NOT NULL," +
+            "FOREIGN KEY(PATH_ID) REFERENCES FILES(ID)," +
+            "FOREIGN KEY(TAG_ID) REFERENCES TAGS(ID)," +
+            "PRIMARY KEY(PATH_ID, TAG_ID))";
 
     public static void createSchema(Connection conn) throws SQLException {
         createFilesTable(conn);
