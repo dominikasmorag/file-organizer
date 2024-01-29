@@ -39,24 +39,24 @@ public class MyFileDAO extends DAO {
         return pathNamesSet;
     }
 
-    public HashSet<MyFile> getFiles() throws SQLException {
-        HashSet<MyFile> myFileSet = new HashSet<>();
-        rs = getDataStatement.executeQuery("SELECT ID_PATH, PATH FROM FILES;");
+    public List<MyFile> getFiles() throws SQLException {
+        List<MyFile> myFileList = new ArrayList<>();
+        rs = getDataStatement.executeQuery("SELECT ID, PATH FROM FILES;");
         while (rs.next()) {
             MyFile myFile = new MyFile(rs.getString(2));
             myFile.setId(rs.getInt(1));
-            myFileSet.add(myFile);
+            myFileList.add(myFile);
         }
-        for (MyFile f : myFileSet) {
+        for (MyFile f : myFileList) {
             System.out.println(f.getId());
             System.out.println(f.getPath());
         }
-        return myFileSet;
+        return myFileList;
     }
 
     HashMap<String, Integer> dataToHashMap() throws SQLException {
-        HashSet<MyFile> myFileSet = getFiles();
-        for (MyFile myFile : myFileSet) {
+        List<MyFile> myFileList = getFiles();
+        for (MyFile myFile : myFileList) {
             hashMap.put(myFile.getPath(), myFile.getId());
         }
         return hashMap;
