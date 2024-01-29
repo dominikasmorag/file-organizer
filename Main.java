@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws SQLException {
 
         JdbcDataSource ds = new JdbcDataSource();
-        ds.setUrl("jdbc:h2:C:/Users/domin/Desktop/git/nowabazadanychhihi");
+        ds.setUrl("jdbc:h2:C:/Users/domin/git/file-organizer.mv.db");
         ds.setUser("sa");
         ds.setPassword("sa");
 
